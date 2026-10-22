@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="noindex,nofollow">
+<title>Sachkunde Lernkarten</title>
+<style>
+:root{--bg:#f7f6f3;--card:#fff;--ink:#1f2328;--muted:#5f6670;--line:#dedbd4;--accent:#2f5d8a;--accent-ink:#fff;--soft:#e8eef5;--good:#2e7d4f;--good-bg:#e5f3ea;--bad:#a8382f;--bad-bg:#f8e6e3;--warn:#8a6a10;--r:12px}
+@media (prefers-color-scheme:dark){:root{--bg:#16181b;--card:#1f2226;--ink:#e6e6e3;--muted:#9aa0a8;--line:#33373d;--accent:#7fb0e0;--accent-ink:#0d1620;--soft:#24303d;--good:#7ccf9c;--good-bg:#1d3326;--bad:#f09a90;--bad-bg:#3a2220;--warn:#e0c060}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(8px + env(safe-area-inset-top)) 16px 8px}
+header .in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:12px}
+header h1{font-size:1rem;margin:0;font-weight:600;flex:1}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:6;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;border:0;background:none;padding:10px 2px;min-height:58px;font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button b{font-size:1.15rem;font-weight:500}
+nav.tabs button.on{color:var(--accent);font-weight:600}
+@media (min-width:900px){body{padding-bottom:24px}nav.tabs{position:sticky;top:0;bottom:auto;border:0;border-bottom:1px solid var(--line);justify-content:center}nav.tabs button{flex:0 0 120px;flex-direction:row;gap:6px;font-size:.92rem;min-height:48px}}
+main{max-width:860px;margin:0 auto;padding:16px}
+h2{font-size:1.3rem;margin:8px 0 12px}
+h3{font-size:1.08rem;margin:18px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.muted{color:var(--muted)}.small{font-size:.88rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 16px;min-height:46px}
+.btn.p{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:.9rem}
+.btn:disabled{opacity:.45}
+select,input[type=date],input[type=search]{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px;min-height:44px;max-width:100%}
+input[type=search]{width:100%}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;flex:1;min-width:80px}
+.bar>span{display:block;height:100%;background:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi div{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.kpi b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.prose{max-width:68ch}
+.prose ul{padding-left:1.2em;margin:6px 0}.prose li{margin:4px 0}
+.prose p{margin:8px 0}
+.list button.item{display:flex;width:100%;text-align:left;justify-content:space-between;gap:10px;border:0;border-bottom:1px solid var(--line);background:none;padding:12px 4px;min-height:48px}
+.tag{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:20px;background:var(--soft);color:var(--muted)}
+.q{font-size:1.12rem;font-weight:600;margin:4px 0 14px}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:12px 14px;margin:8px 0;min-height:50px}
+.opt.sel{border-color:var(--accent);background:var(--soft)}
+.opt.ok{border-color:var(--good);background:var(--good-bg)}
+.opt.no{border-color:var(--bad);background:var(--bad-bg)}
+.ans{border-top:1px solid var(--line);margin-top:14px;padding-top:12px;white-space:pre-line}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.rate .btn{padding:8px 4px;font-size:.92rem;display:flex;flex-direction:column;align-items:center}
+.rate .btn small{color:var(--muted);font-size:.72rem}
+.ok-t{color:var(--good)}.bad-t{color:var(--bad)}
+.timer{font-variant-numeric:tabular-nums;font-weight:600}
+.grid50{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:10px}
+.grid50 button{border:1px solid var(--line);background:var(--card);border-radius:6px;min-height:34px;font-size:.8rem;padding:0}
+.grid50 .a{background:var(--soft)}.grid50 .c{outline:2px solid var(--accent)}
+mark{background:#f3e3a0;color:#1f2328}
+.hidden{display:none}
+</style>
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Sachkunde">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2f5d8a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" href="icons/favicon-32.png">
+<style>
+#gate{max-width:420px;margin:12vh auto 0;padding:0 16px}
+#gate .card{padding:20px}#gate input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin:10px 0}
+#gate .err{color:var(--bad);min-height:1.4em}
+#upd{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:20;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:12px 14px;display:none;justify-content:space-between;align-items:center;gap:10px}
+#upd button{background:var(--accent-ink);color:var(--accent);border:0;border-radius:8px;padding:6px 12px}
+</style>
+</head>
+<body>
+<header><div class="in"><h1>Sachkunde Hundetrainer · § 11 TierSchG</h1><span id="hdr" class="muted small"></span></div></header>
+<nav class="tabs hidden" id="tabs"></nav>
+<main id="app"></main>
+<div id="gate" class="hidden"><div class="card"><h2 style="margin-top:0">Sachkunde Lernkarten</h2>
+<p class="small muted">Bitte das Passwort eingeben. Es wird auf diesem Gerät gespeichert und muss nur einmal eingegeben werden.</p>
+<form id="gf"><input id="gpw" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Passwort">
+<div class="err" id="gerr"></div><button class="btn p" id="gbtn" type="submit">Öffnen</button></form></div></div>
+<div id="upd"><span>Neue Version verfügbar</span><button onclick="location.reload()">Neu laden</button></div>
+<script type="text/plain" id="appcode">"use strict";
+const D = window.__HT_D; delete window.__HT_D;
+const KEY = "ht_lernstand_v1";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const DAY = 864e5;
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); };
+const BER = Object.fromEntries(D.bereiche.map(b => [b.id, b.titel]));
+const bname = id => BER[id] || id;
+const byId = {}; D.karten.forEach(c => byId[c.id] = c); D.mc.forEach(q => byId[q.id] = q);
+const usedB = D.bereiche.filter(b => D.karten.some(c => c.b === b.id) || D.mc.some(q => q.b === b.id) || D.kapitel.some(k => k.b === b.id));
+
+/* ---------- Lernstand ---------- */
+function fresh(){ return {v:1, cards:{}, mc:{}, fehler:{}, gelesen:{}, sims:[], pruefung:"", neuProTag:20, log:{}}; }
+let S;
+try { S = Object.assign(fresh(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e) { S = fresh(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+function logToday(k){ const d = new Date().toISOString().slice(0,10); S.log[d] = S.log[d] || {}; S.log[d][k] = (S.log[d][k]||0)+1; }
+
+/* SM-2 (vereinfacht): q 0=Nochmal 1=Schwer 2=Gut 3=Leicht */
+function schedule(id, q){
+  const c = S.cards[id] || {ef:2.5, iv:0, reps:0, lapses:0};
+  if (q === 0){ c.reps = 0; c.lapses++; c.iv = 0; c.ef = Math.max(1.3, c.ef - .2); c.due = Date.now() + 10*60e3; }
+  else {
+    if (c.reps === 0) c.iv = q === 1 ? 1 : q === 2 ? 1 : 3;
+    else if (c.reps === 1) c.iv = q === 1 ? 3 : q === 2 ? 4 : 6;
+    else c.iv = Math.round(c.iv * (q === 1 ? 1.2 : q === 2 ? c.ef : c.ef * 1.3));
+    c.ef = Math.max(1.3, c.ef + (q === 1 ? -.15 : q === 3 ? .15 : 0));
+    c.reps++; c.due = today() + c.iv * DAY;
+  }
+  c.last = Date.now(); S.cards[id] = c; logToday("karten"); save();
+}
+function preview(id, q){
+  const c = S.cards[id] || {ef:2.5, iv:0, reps:0};
+  if (q === 0) return "10 min";
+  let iv = c.reps === 0 ? (q === 3 ? 3 : 1) : c.reps === 1 ? (q===1?3:q===2?4:6) : Math.round(c.iv*(q===1?1.2:q===2?c.ef:c.ef*1.3));
+  return iv + (iv === 1 ? " Tag" : " Tage");
+}
+const isDue = id => S.cards[id] && S.cards[id].due <= Date.now() + 0 && true;
+const dueTodayEnd = () => today() + DAY;
+function dueCards(oral){ return D.karten.filter(c => !!c.o === oral && S.cards[c.id] && S.cards[c.id].due < dueTodayEnd()); }
+function newCards(oral){ return D.karten.filter(c => !!c.o === oral && !S.cards[c.id]); }
+function newDoneToday(){ const t = today(); return Object.values(S.cards).filter(c => c.first >= t).length; }
+
+/* ---------- Navigation ---------- */
+const TABS = [["start","Start","⌂"],["lesen","Lesen","¶"],["karten","Karten","▤"],["fragen","Fragen","?"],["pruefung","Prüfung","◷"],["mehr","Mehr","…"]];
+let view = "start", timerH = null;
+function go(v, arg){ view = v; if (timerH && v !== "sim") { /* Simulation läuft weiter im Hintergrund */ }
+  $("#tabs").innerHTML = TABS.map(([k,l,i]) => `<button class="${(view===k||(VIEWPARENT[view]===k))?"on":""}" onclick="go('${k}')"><b>${i}</b>${l}</button>`).join("");
+  window.scrollTo(0,0); (V[v]||V.start)(arg); }
+const VIEWPARENT = {kapitel:"lesen", lernen:"karten", mc:"fragen", sim:"pruefung", simres:"pruefung", oral:"mehr", stat:"mehr", info:"mehr", daten:"mehr"};
+const app = h => { $("#app").innerHTML = h; };
+const bopts = (sel, filter) => `<option value="">Alle Themen</option>` + usedB.filter(b => !filter || filter(b.id)).map(b => `<option value="${b.id}" ${sel===b.id?"selected":""}>${esc(b.titel)}</option>`).join("");
+
+/* ---------- Statistik-Helfer ---------- */
+function bereichStat(b){
+  const ks = D.kapitel.filter(k => k.b === b), cs = D.karten.filter(c => c.b === b), qs = D.mc.filter(q => q.b === b);
+  const gel = ks.filter(k => S.gelesen[k.id]).length;
+  const sicher = cs.filter(c => S.cards[c.id] && S.cards[c.id].iv >= 7).length;
+  const gesehen = cs.filter(c => S.cards[c.id]).length;
+  let n = 0, ok = 0; qs.forEach(q => { const m = S.mc[q.id]; if (m){ n += m.n; ok += m.ok; } });
+  S.sims.forEach(s => s.detail && s.detail.forEach(d => { if (d.b === b){ n++; if (d.ok) ok++; } }));
+  return {ks:ks.length, gel, cs:cs.length, gesehen, sicher, qs:qs.length, n, ok, quote: n ? 1 - ok/n : null};
+}
+function tagespensum(){
+  const due = dueCards(false).length + dueCards(true).length;
+  const offen = newCards(false).length + newCards(true).length;
+  let neu = S.neuProTag, tage = null;
+  if (S.pruefung){ tage = Math.ceil((new Date(S.pruefung).getTime() - today()) / DAY);
+    if (tage > 0) neu = Math.ceil(offen / Math.max(1, tage - 7)); }  // letzte Woche nur Wiederholung + Simulation
+  const ungelesen = D.kapitel.filter(k => !S.gelesen[k.id]).length;
+  return {due, neu: Math.min(offen, Math.max(0, neu - newDoneToday())), offen, tage, ungelesen,
+          lesen: tage > 0 ? Math.ceil(ungelesen / Math.max(1, tage - 7)) : Math.min(3, ungelesen)};
+}
+
+/* ---------- Ansichten ---------- */
+const V = {};
+V.start = () => {
+  const p = tagespensum(), fl = Object.keys(S.fehler).length;
+  let rows = usedB.map(b => { const s = bereichStat(b.id);
+    const pr = (s.ks ? s.gel/s.ks : 0)*.3 + (s.cs ? s.sicher/s.cs : 0)*.4 + (s.n ? Math.min(1, s.ok/Math.max(1,s.qs)) : 0)*.3;
+    return `<tr><td><a href="#" onclick="go('kapitel','${b.id}');return false">${esc(b.titel)}</a><div class="small muted">${s.gel}/${s.ks} gelesen · ${s.sicher}/${s.cs} Karten sicher · ${s.n?Math.round(100*s.ok/s.n)+" % richtig":"noch keine Fragen"}</div></td><td style="width:30%"><div class="bar"><span style="width:${Math.round(pr*100)}%"></span></div></td></tr>`; }).join("");
+  const last = S.sims[S.sims.length-1];
+  app(`<h2>Heute</h2>
+  <div class="kpi">
+    <div><span class="muted small">Fällige Wiederholungen</span><b>${p.due}</b></div>
+    <div><span class="muted small">Neue Karten heute</span><b>${p.neu}</b></div>
+    <div><span class="muted small">Fehlerliste</span><b>${fl}</b></div>
+    <div><span class="muted small">Prüfung</span><b>${p.tage == null ? "–" : p.tage > 0 ? p.tage + " Tage" : "vorbei"}</b></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="row"><button class="btn p" onclick="go('lernen',{oral:false})" ${p.due+p.neu?"":"disabled"}>Karten lernen (${p.due + p.neu})</button>
+    <button class="btn" onclick="startMC({fehler:true})" ${fl?"":"disabled"}>Fehlerliste üben</button>
+    <button class="btn" onclick="go('oral')">Mündlich üben</button></div>
+    <p class="small muted" style="margin-bottom:0">Vorschlag: ${p.due} Wiederholungen, ${p.neu} neue Karten${p.ungelesen ? `, ${p.lesen} Kapitel lesen` : ""}${p.tage > 0 && p.tage <= 10 ? ", täglich eine Prüfungssimulation" : ""}. ${p.tage > 0 ? "Neue Karten werden so verteilt, dass die letzte Woche vor der Prüfung nur noch der Wiederholung dient." : ""}</p>
+  </div>
+  <div class="card"><div class="row"><label for="pd">Prüfungsdatum</label><input type="date" id="pd" value="${S.pruefung}" onchange="S.pruefung=this.value;save();go('start')">
+    <label for="np" class="small muted">Neue Karten/Tag ohne Datum</label><select id="np" onchange="S.neuProTag=+this.value;save();go('start')">${[10,15,20,30,40].map(n=>`<option ${S.neuProTag==n?"selected":""}>${n}</option>`).join("")}</select></div>
+    ${last ? `<p class="small muted" style="margin-bottom:0">Letzte Simulation: ${new Date(last.t).toLocaleDateString("de-DE")} – ${last.pct} % (${last.pct > 75 ? "bestanden" : "nicht bestanden"})</p>` : ""}</div>
+  <h2>Fortschritt je Themenbereich</h2><div class="card"><table>${rows}</table>
+  <p class="small muted">Balken: 30 % gelesen, 40 % Karten mit Intervall ≥ 7 Tage, 30 % Fragen beantwortet.</p></div>`);
+};
+
+/* Mini-Markdown */
+function md(t, hl){
+  const lines = String(t||"").split("\n"); let h = "", inUl = false;
+  const inline = s => { s = esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g,'$1');
+    if (hl) s = s.replace(new RegExp("(" + hl.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + ")","gi"),"<mark>$1</mark>"); return s; };
+  for (const l of lines){
+    const m = l.match(/^\s*[-*]\s+(.*)/);
+    if (m){ if (!inUl){ h += "<ul>"; inUl = true; } h += `<li>${inline(m[1])}</li>`; continue; }
+    if (inUl){ h += "</ul>"; inUl = false; }
+    const hm = l.match(/^(#{1,4})\s+(.*)/);
+    if (hm) h += `<h3>${inline(hm[2])}</h3>`; else if (l.trim()) h += `<p>${inline(l)}</p>`;
+  }
+  return h + (inUl ? "</ul>" : "");
+}
+
+V.lesen = () => {
+  app(`<h2>Lesen</h2><input type="search" id="such" placeholder="Suche in Texten und Karten …" oninput="suche(this.value)"><div id="sr"></div>
+  <div id="blist" class="card list" style="margin-top:14px">${usedB.filter(b => D.kapitel.some(k=>k.b===b.id)).map(b => { const s = bereichStat(b.id);
+    return `<button class="item" onclick="go('kapitel','${b.id}')"><span>${esc(b.titel)}</span><span class="muted small">${s.gel}/${s.ks}</span></button>`; }).join("")}</div>`);
+};
+window.suche = q => {
+  q = q.trim(); $("#blist").classList.toggle("hidden", q.length >= 3);
+  if (q.length < 3){ $("#sr").innerHTML = ""; return; }
+  const l = q.toLowerCase();
+  const ks = D.kapitel.filter(k => (k.titel + " " + k.text).toLowerCase().includes(l)).slice(0, 30);
+  const cs = D.karten.filter(c => (c.f + " " + c.a).toLowerCase().includes(l)).slice(0, 30);
+  $("#sr").innerHTML = `<div class="card list"><p class="small muted">${ks.length} Kapitel, ${cs.length} Karten${cs.length===30||ks.length===30?" (max. 30)":""}</p>` +
+    ks.map(k => `<button class="item" onclick="openKap('${k.id}','${esc(q).replace(/'/g,"")}')"><span>${esc(k.titel)}</span><span class="tag">${esc(bname(k.b))}</span></button>`).join("") +
+    cs.map(c => `<div style="padding:10px 4px;border-bottom:1px solid var(--line)"><b>${md(c.f, q).replace(/<\/?p>/g,"")}</b><div class="small" style="white-space:pre-line">${esc(c.a)}</div><span class="tag">${esc(bname(c.b))}</span></div>`).join("") + "</div>";
+};
+let hlTerm = "";
+window.openKap = (id, q) => { hlTerm = q || ""; const k = D.kapitel.find(x => x.id === id); go("kapitel", k.b); setTimeout(() => { const e = document.getElementById(id); if (e) e.scrollIntoView(); }, 30); };
+V.kapitel = b => {
+  const ks = D.kapitel.filter(k => k.b === b);
+  app(`<button class="btn sm" onclick="go('lesen')">← Übersicht</button><h2>${esc(bname(b))}</h2>
+  <div class="card small">${ks.map((k,i) => `<a href="#${k.id}" onclick="document.getElementById('${k.id}').scrollIntoView();return false">${i+1}. ${esc(k.titel)}</a>${S.gelesen[k.id]?" ✓":""}`).join("<br>")}</div>
+  ${ks.map((k,i) => `<article class="card prose" id="${k.id}"><h3 style="margin-top:0">${i+1}. ${esc(k.titel)}</h3>${md(k.text, hlTerm)}
+   <div class="row" style="margin-top:12px"><button class="btn sm ${S.gelesen[k.id]?"":"p"}" onclick="toggleGel('${k.id}',this)">${S.gelesen[k.id]?"Gelesen ✓":"Als gelesen markieren"}</button></div></article>`).join("")}
+  <div class="row"><button class="btn p" onclick="go('lernen',{b:'${b}',oral:false})">Karten zu diesem Thema</button><button class="btn" onclick="startMC({b:'${b}'})">Fragen zu diesem Thema</button></div>`);
+  hlTerm = "";
+};
+window.toggleGel = (id, el) => { if (S.gelesen[id]) delete S.gelesen[id]; else S.gelesen[id] = Date.now(); save();
+  el.textContent = S.gelesen[id] ? "Gelesen ✓" : "Als gelesen markieren"; el.classList.toggle("p", !S.gelesen[id]); };
+
+/* ---------- Lernkarten ---------- */
+let queue = [], cur = null, deckOpts = {};
+V.karten = () => {
+  const rows = usedB.filter(b => D.karten.some(c => c.b === b.id && !c.o)).map(b => {
+    const cs = D.karten.filter(c => c.b === b.id && !c.o), due = cs.filter(c => S.cards[c.id] && S.cards[c.id].due < dueTodayEnd()).length, neu = cs.filter(c => !S.cards[c.id]).length;
+    return `<tr><td><a href="#" onclick="go('lernen',{b:'${b.id}',oral:false});return false">${esc(b.titel)}</a></td><td class="n">${due}</td><td class="n">${neu}</td><td class="n">${cs.length}</td></tr>`; }).join("");
+  app(`<h2>Lernkarten</h2><div class="card"><p class="small muted" style="margin-top:0">Frage lesen, Antwort im Kopf formulieren, aufdecken, ehrlich bewerten. Wiederholung nach SM-2: was sitzt, kommt seltener.</p>
+  <div class="row"><select id="kb">${bopts("", id => D.karten.some(c=>c.b===id && !c.o))}</select><button class="btn p" onclick="go('lernen',{b:$('#kb').value,oral:false})">Lernen</button></div></div>
+  <div class="card"><table><tr><th>Thema</th><th class="n">fällig</th><th class="n">neu</th><th class="n">gesamt</th></tr>${rows}</table></div>`);
+};
+function buildQueue(o){
+  const f = c => !!c.o === !!o.oral && (!o.b || c.b === o.b);
+  const due = D.karten.filter(c => f(c) && S.cards[c.id] && S.cards[c.id].due < dueTodayEnd()).sort((a,b) => S.cards[a.id].due - S.cards[b.id].due);
+  const p = tagespensum();
+  const lim = o.b ? 20 : Math.max(p.neu, 0);
+  const neu = D.karten.filter(c => f(c) && !S.cards[c.id]).slice(0, o.oral ? 10 : lim);
+  return due.concat(neu).map(c => c.id);
+}
+V.lernen = o => { deckOpts = o || {}; queue = buildQueue(deckOpts); nextCard(); };
+V.oral = () => {
+  const due = dueCards(true).length, neu = newCards(true).length, n = D.karten.filter(c => c.o).length;
+  app(`<h2>Mündliche Prüfung üben</h2><div class="card prose"><p style="margin-top:0">Die Sachkundeprüfung in Bayern hat einen mündlichen Teil (Fachgespräch). Hier: Frage lesen, eigene Antwort <b>laut</b> formulieren (ruhig vollständige Sätze, Fachbegriffe, Beispiel aus der Praxis), dann Musterantwort aufdecken und selbst bewerten.</p>
+  <p class="small muted">${n} Katalogfragen · ${due} fällig · ${neu} neu</p>
+  <div class="row"><select id="ob">${bopts("", id => D.karten.some(c=>c.b===id && c.o))}</select><button class="btn p" onclick="go('lernen',{oral:true,b:$('#ob').value})" ${n?"":"disabled"}>Starten</button></div></div>`);
+};
+function nextCard(){
+  const oral = deckOpts.oral, back = oral ? "oral" : "karten";
+  if (!queue.length){ app(`<div class="card"><h2>Für jetzt erledigt</h2><p>Keine fälligen ${oral?"Katalogfragen":"Karten"} ${deckOpts.b ? "in diesem Thema " : ""}mehr. Morgen geht es weiter.</p>
+    <div class="row"><button class="btn" onclick="go('${back}')">Zurück</button>${!oral && D.karten.some(c=>!c.o && !S.cards[c.id] && (!deckOpts.b||c.b===deckOpts.b)) ? `<button class="btn" onclick="extraNeu()">10 weitere neue Karten</button>` : ""}</div></div>`); return; }
+  cur = byId[queue[0]];
+  app(`<div class="row" style="justify-content:space-between"><button class="btn sm" onclick="go('${back}')">← Beenden</button><span class="small muted">noch ${queue.length}</span></div>
+  <div class="card" style="margin-top:10px"><span class="tag">${esc(bname(cur.b))}</span>${!S.cards[cur.id]?' <span class="tag">neu</span>':""}
+   <div class="q">${esc(cur.f)}</div>${oral?'<p class="small muted">Antwort laut formulieren, dann aufdecken.</p>':""}
+   <div id="back" class="hidden"><div class="ans">${md(cur.a)}</div>
+    <div class="rate">${["Nochmal","Schwer","Gut","Leicht"].map((l,i) => `<button class="btn" onclick="rate(${i})">${l}<small>${preview(cur.id,i)}</small></button>`).join("")}</div></div>
+   <button id="show" class="btn p" style="width:100%;margin-top:8px" onclick="$('#back').classList.remove('hidden');this.remove()">Antwort zeigen</button></div>
+  <p class="small muted">Tastatur: Leertaste = aufdecken, 1–4 = bewerten.</p>`);
+}
+window.extraNeu = () => { const f = c => !c.o && (!deckOpts.b || c.b === deckOpts.b) && !S.cards[c.id]; queue = D.karten.filter(f).slice(0,10).map(c=>c.id); nextCard(); };
+window.rate = q => { const id = queue.shift(); const isNew = !S.cards[id]; schedule(id, q); if (isNew) S.cards[id].first = Date.now(), save();
+  if (q === 0) queue.splice(Math.min(queue.length, 4), 0, id); nextCard(); };
+document.addEventListener("keydown", e => {
+  if (view !== "lernen" || e.target.tagName === "INPUT") return;
+  if (e.key === " " && $("#show")){ e.preventDefault(); $("#show").click(); }
+  else if (/^[1-4]$/.test(e.key) && !$("#show") && $("#back")) rate(+e.key - 1);
+});
+
+/* ---------- MC-Training ---------- */
+let mcQ = [], mcI = 0, mcOpts = {}, mcSel = [];
+V.fragen = () => {
+  const fl = Object.keys(S.fehler).filter(id => byId[id]).length;
+  app(`<h2>Fragen trainieren</h2>
+  <div class="card"><p class="small muted" style="margin-top:0">Multiple-Choice mit sofortiger Erklärung. Falsch beantwortete Fragen landen in der Fehlerliste und bleiben dort, bis sie zweimal hintereinander richtig beantwortet wurden.</p>
+  <div class="row"><select id="mb">${bopts("", id => D.mc.some(q=>q.b===id))}</select>
+  <select id="mn">${[10,20,30,50].map(n=>`<option>${n}</option>`).join("")}</select>
+  <button class="btn p" onclick="startMC({b:$('#mb').value,n:+$('#mn').value})">Starten</button></div></div>
+  <div class="card"><h3 style="margin-top:0">Fehlerliste (${fl})</h3>
+  ${fl ? `<button class="btn p" onclick="startMC({fehler:true})">Fehlerliste üben</button>
+  <ul class="small">${Object.keys(S.fehler).filter(id=>byId[id]).slice(0,40).map(id => `<li>${esc(byId[id].f)} <span class="muted">(${S.fehler[id]}/2)</span></li>`).join("")}</ul>` : '<p class="muted">Leer.</p>'}</div>
+  <p class="small muted">${D.mc.length} Fragen im Bestand.</p>`);
+};
+const shuffle = a => { for (let i = a.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; };
+window.startMC = o => { mcOpts = o; view = "mc";
+  let pool = o.fehler ? Object.keys(S.fehler).filter(id => byId[id]).map(id => byId[id]) : D.mc.filter(q => !o.b || q.b === o.b);
+  // weniger oft gesehene zuerst, dann zufällig
+  pool = shuffle(pool.slice()).sort((a,b) => ((S.mc[a.id]||{}).n||0) - ((S.mc[b.id]||{}).n||0));
+  mcQ = pool.slice(0, o.fehler ? 30 : (o.n || 10)).map(q => ({q, perm: shuffle(q.o.map((_,i)=>i))})); mcI = 0; mcStats = {n:0, ok:0}; go("mc"); };
+let mcStats = {n:0, ok:0};
+V.mc = () => {
+  if (mcI >= mcQ.length){ app(`<div class="card"><h2>Runde beendet</h2><p>${mcStats.ok} von ${mcStats.n} richtig.</p><div class="row"><button class="btn p" onclick="startMC(mcOpts)">Neue Runde</button><button class="btn" onclick="go('fragen')">Zurück</button></div></div>`); return; }
+  const {q, perm} = mcQ[mcI]; mcSel = []; const multi = q.r.length > 1;
+  app(`<div class="row" style="justify-content:space-between"><button class="btn sm" onclick="go('fragen')">← Beenden</button><span class="small muted">${mcI+1} / ${mcQ.length}</span></div>
+  <div class="card" style="margin-top:10px"><span class="tag">${esc(bname(q.b))}</span>${q.t?` <span class="tag">${esc(q.t)}</span>`:""}
+  <div class="q">${esc(q.f)}</div>${multi?'<p class="small muted">Mehrere Antworten richtig – alle auswählen, dann prüfen.</p>':""}
+  <div id="opts">${perm.map((oi,k) => `<button class="opt" data-i="${oi}" onclick="mcPick(${oi},this)">${String.fromCharCode(65+k)}) ${esc(q.o[oi])}</button>`).join("")}</div>
+  ${multi?'<button class="btn p" id="chk" onclick="mcCheck()">Prüfen</button>':""}<div id="fb"></div></div>`);
+};
+window.mcPick = (i, el) => { const {q} = mcQ[mcI]; if ($("#fb").innerHTML) return;
+  if (q.r.length > 1){ el.classList.toggle("sel"); mcSel = mcSel.includes(i) ? mcSel.filter(x=>x!==i) : mcSel.concat(i); return; }
+  mcSel = [i]; mcCheck(); };
+window.mcCheck = () => {
+  const {q} = mcQ[mcI]; if (!mcSel.length) return;
+  const ok = mcSel.length === q.r.length && mcSel.every(i => q.r.includes(i));
+  document.querySelectorAll("#opts .opt").forEach(b => { const i = +b.dataset.i; if (q.r.includes(i)) b.classList.add("ok"); else if (mcSel.includes(i)) b.classList.add("no"); b.disabled = true; });
+  const m = S.mc[q.id] || {n:0, ok:0}; m.n++; if (ok) m.ok++; m.last = Date.now(); S.mc[q.id] = m;
+  if (!ok) S.fehler[q.id] = 0; else if (q.id in S.fehler){ S.fehler[q.id]++; if (S.fehler[q.id] >= 2) delete S.fehler[q.id]; }
+  mcStats.n++; if (ok) mcStats.ok++; logToday("fragen"); save();
+  const st = q.id in S.fehler ? `<span class="small muted"> · Fehlerliste ${S.fehler[q.id]}/2</span>` : "";
+  $("#fb").innerHTML = `<div class="ans"><b class="${ok?"ok-t":"bad-t"}">${ok?"Richtig.":"Nicht richtig."}</b>${st}${q.e?`<div style="margin-top:6px">${esc(q.e)}</div>`:""}</div>
+   <button class="btn p" style="width:100%;margin-top:12px" onclick="mcI++;V.mc()">Weiter</button>`;
+  const c = $("#chk"); if (c) c.remove();
+};
+
+/* ---------- Prüfungssimulation ---------- */
+let sim = null;
+const SIM_N = 50, SIM_MIN = 90;
+V.pruefung = () => {
+  const sc = D.mc.filter(q => q.r.length === 1).length;
+  const hist = S.sims.slice().reverse().map(s => `<tr><td>${new Date(s.t).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})}</td><td class="n">${s.ok}/${s.n}</td><td class="n">${s.pct} %</td><td class="n">${Math.round(s.dauer/60)} min</td><td>${s.pct>75?'<span class="ok-t">bestanden</span>':'<span class="bad-t">nicht bestanden</span>'}</td></tr>`).join("");
+  app(`<h2>Prüfungssimulation</h2><div class="card prose"><p style="margin-top:0">Angelehnt an den in Bayern eingesetzten computergestützten Test (D.O.Q.-Test PRO): <b>${SIM_N} Fragen, ${SIM_MIN} Minuten</b>, je Frage genau eine richtige Antwort, gemischt über alle Themen. Rückmeldung erst am Ende. Bestanden bei <b>mehr als 75 %</b> richtigen Antworten.</p>
+  <p class="small muted">${sc} Single-Choice-Fragen verfügbar.</p>
+  ${sim && !sim.done ? `<button class="btn p" onclick="go('sim')">Laufende Simulation fortsetzen</button>` : `<button class="btn p" onclick="simStart()" ${sc>=SIM_N?"":"disabled"}>Simulation starten</button>`}</div>
+  <div class="card"><h3 style="margin-top:0">Verlauf</h3>${hist ? `<table><tr><th>Datum</th><th class="n">richtig</th><th class="n">Quote</th><th class="n">Dauer</th><th></th></tr>${hist}</table>` : '<p class="muted">Noch keine Simulation.</p>'}</div>`);
+};
+window.simStart = () => {
+  // gemischt: aus jedem Bereich proportional, dann zufällig auffüllen
+  const pool = shuffle(D.mc.filter(q => q.r.length === 1).slice()), by = {};
+  pool.forEach(q => (by[q.b] = by[q.b] || []).push(q));
+  const pick = [], keys = shuffle(Object.keys(by));
+  while (pick.length < SIM_N && keys.some(k => by[k].length)) for (const k of keys){ if (pick.length >= SIM_N) break; const q = by[k].pop(); if (q) pick.push(q); }
+  sim = {qs: shuffle(pick).map(q => ({id:q.id, perm: shuffle(q.o.map((_,i)=>i)), a:null})), i:0, start:Date.now(), done:false};
+  go("sim");
+};
+function simTick(){ if (!sim || sim.done){ clearInterval(timerH); timerH = null; return; }
+  const left = sim.start + SIM_MIN*60e3 - Date.now();
+  if (left <= 0){ simEnd(); return; }
+  const t = `${Math.floor(left/60e3)}:${String(Math.floor(left/1e3)%60).padStart(2,"0")}`;
+  $("#hdr").textContent = "Simulation · " + t; const e = $("#tm"); if (e) e.textContent = t; }
+V.sim = () => {
+  if (!sim || sim.done) return go("pruefung");
+  if (!timerH) timerH = setInterval(simTick, 1000);
+  const s = sim.qs[sim.i], q = byId[s.id], answered = sim.qs.filter(x => x.a !== null).length;
+  app(`<div class="row" style="justify-content:space-between"><span class="timer">⏱ <span id="tm"></span></span><span class="small muted">${answered}/${SIM_N} beantwortet</span></div>
+  <div class="card" style="margin-top:10px"><span class="small muted">Frage ${sim.i+1} von ${SIM_N}</span><div class="q">${esc(q.f)}</div>
+  ${s.perm.map((oi,k) => `<button class="opt ${s.a===oi?"sel":""}" onclick="sim.qs[sim.i].a=${oi};V.sim()">${String.fromCharCode(65+k)}) ${esc(q.o[oi])}</button>`).join("")}
+  <div class="row" style="justify-content:space-between;margin-top:10px"><button class="btn" onclick="sim.i--;V.sim()" ${sim.i?"":"disabled"}>← Zurück</button>
+  <button class="btn ${sim.i<SIM_N-1?"p":""}" onclick="sim.i++;V.sim()" ${sim.i<SIM_N-1?"":"disabled"}>Weiter →</button></div></div>
+  <div class="card"><div class="grid50">${sim.qs.map((x,k) => `<button class="${x.a!==null?"a":""} ${k===sim.i?"c":""}" onclick="sim.i=${k};V.sim()">${k+1}</button>`).join("")}</div>
+  <div class="row" style="margin-top:12px"><button class="btn p" onclick="if(confirm('${answered<SIM_N?`Noch ${SIM_N-answered} Fragen offen. `:""}Prüfung abgeben?'))simEnd()">Abgeben</button></div></div>`);
+  simTick();
+};
+window.simEnd = () => {
+  if (!sim || sim.done) return; sim.done = true; clearInterval(timerH); timerH = null; $("#hdr").textContent = "";
+  const detail = sim.qs.map(x => { const q = byId[x.id]; return {id:x.id, b:q.b, a:x.a, ok: x.a !== null && q.r.includes(x.a)}; });
+  const ok = detail.filter(d => d.ok).length, pct = Math.round(1000*ok/SIM_N)/10;
+  detail.filter(d => !d.ok).forEach(d => S.fehler[d.id] = 0);
+  const res = {t:Date.now(), n:SIM_N, ok, pct, dauer: Math.round((Date.now()-sim.start)/1000), detail};
+  S.sims.push(res); save(); go("simres", res);
+};
+V.simres = r => {
+  r = r || S.sims[S.sims.length-1]; const by = {};
+  r.detail.forEach(d => { by[d.b] = by[d.b] || {n:0, ok:0}; by[d.b].n++; if (d.ok) by[d.b].ok++; });
+  app(`<div class="card"><h2 style="margin-top:0">${r.pct > 75 ? '<span class="ok-t">Bestanden</span>' : '<span class="bad-t">Nicht bestanden</span>'} – ${r.ok} von ${r.n} (${r.pct} %)</h2>
+  <p class="muted small">Grenze: mehr als 75 % (mind. ${Math.floor(r.n*.75)+1} richtige). Dauer ${Math.round(r.dauer/60)} min. Falsche Antworten wurden in die Fehlerliste übernommen.</p>
+  <table><tr><th>Thema</th><th class="n">richtig</th><th class="n">Quote</th></tr>${Object.entries(by).sort((a,b)=>a[1].ok/a[1].n-b[1].ok/b[1].n).map(([b,s]) => `<tr><td>${esc(bname(b))}</td><td class="n">${s.ok}/${s.n}</td><td class="n">${Math.round(100*s.ok/s.n)} %</td></tr>`).join("")}</table></div>
+  <h3>Durchsicht</h3>${r.detail.map((d,k) => { const q = byId[d.id]; if (!q) return ""; return `<div class="card small"><b>${k+1}. ${esc(q.f)}</b>
+   ${q.o.map((o,i) => `<div class="${q.r.includes(i)?"ok-t":i===d.a?"bad-t":"muted"}">${q.r.includes(i)?"✓":i===d.a?"✗":"·"} ${esc(o)}</div>`).join("")}${d.a===null?'<div class="bad-t">nicht beantwortet</div>':""}${q.e?`<div class="muted" style="margin-top:4px">${esc(q.e)}</div>`:""}</div>`; }).join("")}
+  <button class="btn" onclick="go('pruefung')">Zurück</button>`);
+};
+
+/* ---------- Mehr: Schwachstellen, Info, Daten ---------- */
+V.mehr = () => app(`<h2>Mehr</h2><div class="card list">
+  <button class="item" onclick="go('oral')"><span>Mündliche Prüfung üben (Fragenkatalog § 11)</span><span class="muted">${D.karten.filter(c=>c.o).length}</span></button>
+  <button class="item" onclick="go('stat')"><span>Schwachstellen &amp; Statistik</span><span></span></button>
+  <button class="item" onclick="go('info')"><span>Ablauf der Prüfung in Bayern</span><span></span></button>
+  <button class="item" onclick="go('daten')"><span>Lernstand sichern / übertragen</span><span></span></button></div>`);
+V.stat = () => {
+  const rows = usedB.map(b => ({b, s: bereichStat(b.id)}));
+  const weak = rows.filter(r => r.s.n).sort((a,b) => b.s.quote - a.s.quote);
+  const hart = D.karten.filter(c => S.cards[c.id] && S.cards[c.id].lapses >= 2).sort((a,b)=>S.cards[b.id].lapses-S.cards[a.id].lapses).slice(0,15);
+  const days = Object.keys(S.log).sort().slice(-14);
+  const tot = {k: Object.keys(S.cards).length, f: Object.values(S.mc).reduce((a,m)=>a+m.n,0), ok: Object.values(S.mc).reduce((a,m)=>a+m.ok,0)};
+  app(`<h2>Schwachstellen</h2><div class="card">${weak.length ? `<table><tr><th>Thema</th><th class="n">Fehlerquote</th><th class="n">beantwortet</th><th></th></tr>${weak.map(r => `<tr><td>${esc(r.b.titel)}</td><td class="n">${Math.round(100*r.s.quote)} %</td><td class="n">${r.s.n}</td><td><button class="btn sm" onclick="startMC({b:'${r.b.id}',n:20})">üben</button></td></tr>`).join("")}</table>` : '<p class="muted">Noch keine Fragen beantwortet.</p>'}
+  <p class="small muted">Grundlage: MC-Training und Simulationen.</p></div>
+  ${hart.length ? `<div class="card"><h3 style="margin-top:0">Karten, die oft vergessen werden</h3><ul class="small">${hart.map(c => `<li>${esc(c.f)} <span class="muted">(${S.cards[c.id].lapses}×)</span></li>`).join("")}</ul></div>` : ""}
+  <h2>Statistik</h2><div class="kpi"><div><span class="muted small">Karten begonnen</span><b>${tot.k}/${D.karten.length}</b></div><div><span class="muted small">Fragen beantwortet</span><b>${tot.f}</b></div>
+  <div><span class="muted small">davon richtig</span><b>${tot.f?Math.round(100*tot.ok/tot.f)+" %":"–"}</b></div><div><span class="muted small">Kapitel gelesen</span><b>${Object.keys(S.gelesen).length}/${D.kapitel.length}</b></div></div>
+  <div class="card" style="margin-top:14px"><h3 style="margin-top:0">Letzte 14 Lerntage</h3>${days.length ? `<table><tr><th>Tag</th><th class="n">Karten</th><th class="n">Fragen</th></tr>${days.reverse().map(d => `<tr><td>${new Date(d).toLocaleDateString("de-DE")}</td><td class="n">${S.log[d].karten||0}</td><td class="n">${S.log[d].fragen||0}</td></tr>`).join("")}</table>` : '<p class="muted">Noch nichts.</p>'}</div>`);
+};
+V.info = () => app(`<button class="btn sm" onclick="go('mehr')">← Mehr</button><article class="card prose" style="margin-top:10px">${md(D.info) || '<p class="muted">Keine Info-Datei eingebaut.</p>'}</article>`);
+V.daten = () => app(`<h2>Lernstand</h2><div class="card prose"><p style="margin-top:0">Der Lernstand liegt nur in diesem Browser auf diesem Gerät. Für einen Gerätewechsel exportieren und auf dem anderen Gerät importieren.</p>
+  <div class="row"><button class="btn p" onclick="exportState()">Exportieren (JSON)</button>
+  <label class="btn" for="imp">Importieren …</label><input type="file" id="imp" accept="application/json,.json" class="hidden" onchange="importState(this.files[0])"></div>
+  <p class="small muted">Import ersetzt den aktuellen Lernstand.</p>
+  <h3>Gerät</h3><p class="small muted">Das Passwort ist auf diesem Gerät gespeichert. Abmelden löscht nur das Passwort, nicht den Lernstand.</p><button class="btn" onclick="htLogout()">Abmelden</button>
+  <h3>Zurücksetzen</h3><button class="btn" onclick="if(confirm('Gesamten Lernstand löschen? Das lässt sich nicht rückgängig machen (außer über einen Export).')){S=fresh();save();go('start')}">Lernstand zurücksetzen</button></div>`);
+window.exportState = async () => { const json = JSON.stringify(S, null, 1), fn = "hundetrainer-lernstand-" + new Date().toISOString().slice(0,10) + ".json";
+  // Im claude.ai-Artifact laufen Downloads nur über die downloads-Capability
+  const dl = window.claude && window.claude.use ? await window.claude.use("downloads").catch(() => null) : null;
+  if (dl) { try { await dl.save({filename: fn, data: json}); } catch (e) {} return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([json], {type:"application/json"})); a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
+window.importState = f => { if (!f) return; const r = new FileReader(); r.onload = () => { try { const j = JSON.parse(r.result); if (!j || typeof j !== "object" || !("cards" in j)) throw 0;
+  S = Object.assign(fresh(), j); save(); alert("Lernstand importiert."); go("start"); } catch(e){ alert("Datei ist kein gültiger Lernstand."); } }; r.readAsText(f); };
+
+Object.assign(window, {go, V});
+go("start");
+</script>
+<script>
+"use strict";
+(function(){
+const KK = "ht_key_v1";
+const b64 = u => btoa(String.fromCharCode.apply(null, u));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+let blob = null;
+async function getBlob(){
+  if (blob) return blob;
+  const r = await fetch("data.enc", {cache: "no-cache"});
+  if (!r.ok) throw new Error("data.enc nicht ladbar (" + r.status + ")");
+  const b = new Uint8Array(await r.arrayBuffer());
+  if (String.fromCharCode(b[0], b[1], b[2]) !== "HT1") throw new Error("data.enc unbekanntes Format");
+  const iter = new DataView(b.buffer).getUint32(3);
+  return blob = {iter, salt: b.slice(7, 23), iv: b.slice(23, 35), ct: b.slice(35)};
+}
+async function decrypt(raw){
+  const bl = await getBlob();
+  const k = await crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({name: "AES-GCM", iv: bl.iv, additionalData: new TextEncoder().encode("HT1")}, k, bl.ct);
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function derive(pw){
+  const bl = await getBlob();
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+  return new Uint8Array(await crypto.subtle.deriveBits({name: "PBKDF2", hash: "SHA-256", salt: bl.salt, iterations: bl.iter}, base, 256));
+}
+function start(d){
+  window.__HT_D = d;
+  document.getElementById("gate").classList.add("hidden");
+  document.getElementById("tabs").classList.remove("hidden");
+  const s = document.createElement("script");
+  s.textContent = document.getElementById("appcode").textContent;
+  document.body.appendChild(s);
+}
+function showGate(msg){
+  document.getElementById("tabs").classList.add("hidden");
+  document.getElementById("gate").classList.remove("hidden");
+  document.getElementById("gerr").textContent = msg || "";
+  document.getElementById("gpw").focus();
+}
+window.htLogout = () => { if (!confirm("Auf diesem Gerät abmelden? Der Lernstand bleibt erhalten.")) return;
+  try { localStorage.removeItem(KK); } catch(e) {} location.reload(); };
+document.getElementById("gf").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const pw = document.getElementById("gpw").value.trim().normalize("NFC"), btn = document.getElementById("gbtn"), err = document.getElementById("gerr");
+  if (!pw) { err.textContent = "Bitte Passwort eingeben."; return; }
+  btn.disabled = true; err.textContent = "Prüfe …";
+  try {
+    const raw = await derive(pw);
+    let d;
+    try { d = await decrypt(raw); } catch(e) { err.textContent = "Falsches Passwort. Bitte noch einmal versuchen (Groß-/Kleinschreibung und Bindestriche beachten)."; btn.disabled = false; return; }
+    try { localStorage.setItem(KK, b64(raw)); } catch(e) {}
+    start(d);
+  } catch(e) { err.textContent = "Fehler beim Laden: " + e.message; btn.disabled = false; }
+});
+(async () => {
+  let raw = null;
+  try { const s = localStorage.getItem(KK); if (s) raw = unb64(s); } catch(e) {}
+  if (raw) {
+    try { start(await decrypt(raw)); return; }
+    catch(e) { try { localStorage.removeItem(KK); } catch(_) {} return showGate("Gespeichertes Passwort passt nicht mehr – bitte neu eingeben."); }
+  }
+  showGate();
+})();
+if ("serviceWorker" in navigator) {
+  const had = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("message", e => { if (e.data && e.data.type === "HT_UPDATE" && had) document.getElementById("upd").style.display = "flex"; });
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    const ask = w => { if (w && navigator.serviceWorker.controller) w.postMessage({type: "HT_SKIP_WAITING"}); };
+    if (reg.waiting) ask(reg.waiting);
+    reg.addEventListener("updatefound", () => { const w = reg.installing; w && w.addEventListener("statechange", () => { if (w.state === "installed") ask(w); }); });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) reg.update().catch(() => {}); });
+  }).catch(() => {});
+}
+})();
+</script>
+</body>
+</html>
